@@ -14,7 +14,7 @@ class M_model extends CI_Model
 			$this->session->unset_userdata('id');
 			$this->session->unset_userdata('is_login');
 			session_destroy();
-			redirect(base_url('adm'));
+			redirect(base_url(''));
 		}
 		
 	}

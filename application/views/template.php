@@ -137,7 +137,7 @@ $user = $this->M_model->getUser($this->session->userdata("id"));
           array(
             "nama"=>"Transaksi",
             "icon"=>"fa fa-history",
-            "url"=>base_url('Dashboard/history')
+            "url"=>base_url('Dashboard/transaksi')
           ),
         );
         if($this->uri->segment(2)==TRUE){
@@ -230,5 +230,32 @@ $user = $this->M_model->getUser($this->session->userdata("id"));
 <script src="<?php echo base_url(); ?>assets/plugins/select2/js/select2.full.min.js"></script>
 <!-- ChartJS -->
 <script src="<?php echo base_url(); ?>assets/plugins/chart.js/Chart.min.js"></script>
+<script>
+  function formatAngka(angka) {
+      if (typeof(angka) != 'string') angka = angka.toString();
+      var reg = new RegExp('([0-9]+)([0-9]{3})');
+      while(reg.test(angka)) angka = angka.replace(reg, '$1.$2');
+      return angka;
+  }
+  function hapuskoma(textid){
+      $('#'+textid).on('keypress', function(e) {
+          var c = e.keyCode || e.charCode;
+          switch (c) {
+              case 8: case 9: case 27: case 13: case 189: return;
+              case 65:
+              if (e.ctrlKey === true) return;
+          }
+          if (c < 48 || c > 57 || c==189) e.preventDefault();
+          // if (c <= 48 && c >= 57 || c >= 96 && c <= 105 || c==8 || c==188 || c==9 || c==116 || c==13 || c==86 || c==17 || c==189){
+          //         e.preventDefault();
+          // }
+      }).on('keyup', function() {
+          var inp = $(this).val().replace(/\./g, '');
+          $(this).val(formatAngka(inp));
+          var namavar = $('#'+textid).val().replace(/\./g, '');
+          $('#'+textid).val(formatAngka(namavar));
+      });
+  }
+</script>
 </body>
 </html>
