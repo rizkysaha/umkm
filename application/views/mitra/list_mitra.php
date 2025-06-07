@@ -28,8 +28,25 @@
 		      	<div class="row"> 
 		      		<div class="col-6">
 		      			<div class="form-group">
-			                <label for="alamat">Alamat</label>
-			                <textarea name="alamat" id="alamat" class="form-control form-control-sm" rows="3"><?php echo $alamat; ?></textarea>
+			                <label for="nama">Alamat</label>
+			                <div class="input-group input-group-sm " style="margin-bottom: 10px; width: 100%;">	
+								<select name="address" id="address" class="form-control form-control-sm select2">
+									<?php 
+									if($address_id!=""){
+										echo '<option value="'.$address_id.'|'.$address_name.'" selected="selected">'.$address_name.'</option>';
+									}
+									?>
+								</select>
+							</div>
+			            </div>
+		      		</div>
+		      		
+		      	</div>
+		      	<div class="row"> 
+		      		<div class="col-6">
+		      			<div class="form-group">
+			                <label for="alamat">Alamat Lengkap</label>
+			                <textarea name="alamat" id="alamat" class="form-control form-control-sm" rows="3" placeholder="Nama jalan atau gedung, dll"><?php echo $alamat; ?></textarea>
 			            </div>
 		      		</div>
 		      	</div>
@@ -173,6 +190,44 @@
   </div>
 </div>
 <script type="text/javascript">
+	$(function () {
+		$('.select2').select2({
+			minimumInputLength: 3,
+		    placeholder: "Ketik desa/kecamatan/kabupaten atau kota/provinsi/kode pos",
+		    // data: [
+			//   {
+			//     id: "<?php echo $address_id.'|'.$address_name; ?>",
+			//     text: '"<?php echo $address_name; ?>"'
+			//   },
+			// ],
+			ajax: {
+		    url: '<?php echo base_url('Dashboard/load_alamat') ?>',
+		    type: "POST",
+	        dataType: 'json',
+	        delay: 250,
+		    data: function (params) {
+		      	return {
+	              	searchTerm: params.term // search term
+	           	};
+		    },
+		    processResults: function (response) {
+	           	return {
+	              	results: response
+	           	};
+	        },
+	        cache: false
+		  }
+		});
+		// var data = {
+		//     id: "<?php echo $address_id.'|'.$address_name; ?>",
+		//     text: '"<?php echo $address_name; ?>"'
+		// };
+
+		// var newOption = new Option(data.text, data.id, false, false);
+		// $('#address').append(newOption).trigger('change');
+		// $("#select2").select2('data', {id: "<?php echo $address_id.'|'.$address_name; ?>", text: "<?php echo $address_name; ?>"}); 
+
+	});
 	function readURL(input) {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();

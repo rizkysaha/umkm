@@ -2,7 +2,7 @@
   <div class="col-12">
   	<div class="card">
   		<div class="card-header">
-	        <h3 class="card-title">Produk Mitra UMKM</h3>
+	        <h3 class="card-title">Produk Mitra UMKM (<?php echo $mitra->nama; ?>)</h3>
 	    </div>
 
       	<div class="card-body">
@@ -28,13 +28,13 @@
 		      		<div class="col-3">
 		      			<div class="form-group">
 			                <label for="harga_beli">Harga Beli</label>
-			                <input type="text" class="form-control form-control-sm text-right" id="harga_beli" name="harga_beli" value="<?php echo number_format((int)$harga_beli,0,",","."); ?>" placeholder="Harga Beli" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)">
+			                <input type="text" class="form-control form-control-sm text-right" id="harga_beli" name="harga_beli" value="<?php echo number_format((int)$harga_beli,0,",","."); ?>" placeholder="Harga Beli" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)" onclick="selectall(this.id)">
 			            </div>
 		      		</div>
 		      		<div class="col-3">
 		      			<div class="form-group">
 			                <label for="harga_jual">Harga Jual</label>
-			                <input type="text" class="form-control form-control-sm text-right" id="harga_jual" name="harga_jual" value="<?php echo number_format((int)$harga_jual,0,",","."); ?>" placeholder="Harga Jual" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)">
+			                <input type="text" class="form-control form-control-sm text-right" id="harga_jual" name="harga_jual" value="<?php echo number_format((int)$harga_jual,0,",","."); ?>" placeholder="Harga Jual" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)" onclick="selectall(this.id)">
 			            </div>
 		      		</div>
 		      	</div>
@@ -42,7 +42,13 @@
 		      		<div class="col-3">
 		      			<div class="form-group">
 			                <label for="stok">Stok</label>
-			                <input type="text" class="form-control form-control-sm" id="stok" name="stok" value="<?php echo $stok; ?>" placeholder="Stok" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)">
+			                <input type="text" class="form-control form-control-sm" id="stok" name="stok" value="<?php echo $stok; ?>" placeholder="Stok" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)" onclick="selectall(this.id)">
+			            </div>
+		      		</div>
+		      		<div class="col-3">
+		      			<div class="form-group">
+			                <label for="stok">Berat (gram)</label>
+			                <input type="text" class="form-control form-control-sm" id="berat" name="berat" value="<?php echo $berat; ?>" placeholder="Berat" onkeyup="hapuskoma(this.id)" onchange="hapuskoma(this.id)" onblur="hapuskoma(this.id)" onclick="selectall(this.id)">
 			            </div>
 		      		</div>
 		      	</div>

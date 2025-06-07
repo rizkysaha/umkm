@@ -24,6 +24,9 @@ $user = $this->M_model->getUser($this->session->userdata("id"));
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/daterangepicker/daterangepicker.css">
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Datepicker bootstrap -->
   <link href="<?php echo base_url(); ?>assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
   <!-- Select2 -->
@@ -199,7 +202,7 @@ $user = $this->M_model->getUser($this->session->userdata("id"));
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 1.0.0
     </div>
-    <strong>Copyright &copy; <?php echo date("Y")?> <a href="#">Kodebayar</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; <?php echo date("Y")?> <a href="#">UMKM.LASEM.WEB.ID</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
@@ -255,6 +258,13 @@ $user = $this->M_model->getUser($this->session->userdata("id"));
           var namavar = $('#'+textid).val().replace(/\./g, '');
           $('#'+textid).val(formatAngka(namavar));
       });
+  }
+  function selectall(id){
+      var a= document.getElementById(id).value;
+      var pjg=a.length;
+      document.getElementById(id).selectionStart=0;
+      document.getElementById(id).selectionEnd =pjg;
+      document.getElementById(id).focus();
   }
 </script>
 </body>

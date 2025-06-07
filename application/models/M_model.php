@@ -6,6 +6,7 @@ class M_model extends CI_Model
 	public function CreateTable(){
 		
 	}
+	
 	public function getUser($id){
 		$get = $this->db->query("SELECT * from users where id = '".$id."'")->row();
 		if($get){

@@ -28,7 +28,7 @@
   	</div>
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Menu Paket</h3>
+        <h3 class="card-title">List Kategori</h3>
         <div class="card-tools">
         	<button class="btn btn-sm btn-success" onclick="add_setting()"><i class="fa fa-plus"></i> Tambah</button>
           <div class="input-group input-group-sm d-none" style="width: 150px;">

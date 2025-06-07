@@ -9,11 +9,16 @@ class Dashboard extends CI_Controller
 		$this->load->model("M_model");
         date_default_timezone_set('asia/jakarta');
         if($this->session->userdata('id')==""||!$this->session->userdata('is_login')){
-			redirect("");
+        	if($this->session->userdata('role_id')!="1"){
+				redirect("");
+        	}
 		}
 	}
 	public function index(){
-		$data['teest'] = "";
+		$data['produk'] = $this->db->query("SELECT count(id) as total from produk")->row();
+		$data['usaha'] = $this->db->query("SELECT count(id) as total from usaha")->row();
+		$data['user'] = $this->db->query("SELECT count(id) as total from users")->row();
+		$data['kategori'] = $this->db->query("SELECT count(id) as total from kategori")->row();
 		$this->template->load('template','admin/dashboard', $data);
 	}
 	public function kategori(){
@@ -106,35 +111,39 @@ class Dashboard extends CI_Controller
 		$id = $this->input->get('id');
 		$get = $this->db->query("SELECT * FROM usaha where id = '".$id."'")->row();
 		if($get){
-			$data['id']          = $get->id;
-			$data['nama']        = $get->nama;
-			$data['deskripsi']   = $get->deskripsi;
-			$data['kategori_id'] = $get->kategori_id;
-			$data['alamat']      = $get->alamat;
-			$data['owner']       = $get->owner;
-			$data['nohp']        = $get->nohp;
-			$data['no_wa']       = $get->no_wa;
-			$data['email']       = $get->email;
-			$data['is_open']     = $get->is_open;
-			$data['icon']     	 = $get->icon;
-			$data['hidden']      = "";
-			$data['path_lama']   = $get->icon;
-			$data['btn_text']    = "Update";
+			$data['id']           = $get->id;
+			$data['nama']         = $get->nama;
+			$data['deskripsi']    = $get->deskripsi;
+			$data['kategori_id']  = $get->kategori_id;
+			$data['alamat']       = $get->alamat;
+			$data['address_id']   = $get->address_id;
+			$data['address_name'] = $get->address_name;
+			$data['owner']        = $get->owner;
+			$data['nohp']         = $get->nohp;
+			$data['no_wa']        = $get->no_wa;
+			$data['email']        = $get->email;
+			$data['is_open']      = $get->is_open;
+			$data['icon']         = $get->icon;
+			$data['hidden']       = "";
+			$data['path_lama']    = $get->icon;
+			$data['btn_text']     = "Update";
 		} else {
-			$data['id']          = "";
-			$data['nama']        = "";
-			$data['deskripsi']   = "";
-			$data['kategori_id'] = "";
-			$data['alamat']      = "";
-			$data['owner']       = "";
-			$data['nohp']        = "";
-			$data['no_wa']       = "";
-			$data['email']       = "";
-			$data['is_open']     = "";
-			$data['icon']     	 = "";
-			$data['hidden']      = "d-none";
-			$data['path_lama']   = "";
-			$data['btn_text']    = "Simpan";
+			$data['id']           = "";
+			$data['nama']         = "";
+			$data['deskripsi']    = "";
+			$data['kategori_id']  = "";
+			$data['alamat']       = "";
+			$data['address_id']   = "";
+			$data['address_name'] = "";
+			$data['owner']        = "";
+			$data['nohp']         = "";
+			$data['no_wa']        = "";
+			$data['email']        = "";
+			$data['is_open']      = "";
+			$data['icon']         = "";
+			$data['hidden']       = "d-none";
+			$data['path_lama']    = "";
+			$data['btn_text']     = "Simpan";
 		}
 		$data['kategori'] = $this->db->query("SELECT * from kategori")->result();
 		$data['mitra'] = $this->getListMitra();
@@ -159,9 +168,12 @@ class Dashboard extends CI_Controller
 				</td>
 				<td><img src="'.base_url().$val->icon.'" alt="" height="100px" class="" style=""></td>
 				<td>'.$val->nama.'</td>
-				<td>'.$val->deskripsi.'</td>
+				<td>'.substr($val->deskripsi, 0, 100).'</td>
 				<td>'.$val->nama_kategori.'</td>
-				<td>'.$val->alamat.'</td>
+				<td>
+					<p>'.$val->address_name.'</p>
+					<p>'.$val->alamat.'</p>
+				</td>
 				<td>'.$val->owner.'</td>
 				<td class="text-right">'.number_format($val->jumlah_produk,0,",",".").'</td>
 				<td>
@@ -199,6 +211,10 @@ class Dashboard extends CI_Controller
 		$is_open = $this->input->post('is_open');
 		$icon = $this->input->post('icon');
 
+		$address = $this->input->post('address');
+		$address_id = explode("|", $address)[0];
+		$address_name = explode("|", $address)[1];
+
 		$path_lama = $this->input->post('path_lama');
 		$path_lama = str_replace(base_url(), "", $path_lama);
 		$namafile = "mitra_".date("ymdHis");
@@ -214,6 +230,8 @@ class Dashboard extends CI_Controller
 					'deskripsi'=>$deskripsi,
 					'kategori_id'=>$kategori_id,
 					'alamat'=>$alamat,
+					'address_id'=>$address_id,
+					'address_name'=>$address_name,
 					'owner'=>$owner,
 					'nohp'=>$nohp,
 					'no_wa'=>$no_wa,
@@ -237,6 +255,8 @@ class Dashboard extends CI_Controller
 					'deskripsi'=>$deskripsi,
 					'kategori_id'=>$kategori_id,
 					'alamat'=>$alamat,
+					'address_id'=>$address_id,
+					'address_name'=>$address_name,
 					'owner'=>$owner,
 					'nohp'=>$nohp,
 					'no_wa'=>$no_wa,
@@ -265,6 +285,37 @@ class Dashboard extends CI_Controller
 		$data = $this->getListMitra();
 		echo json_encode($data);
 	}
+	public function load_alamat(){
+		$cari = $this->input->post("searchTerm");
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => 'https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search='.$cari.'&limit=100',
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => '',
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 0,
+		  CURLOPT_FOLLOWLOCATION => true,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => 'GET',
+		  CURLOPT_HTTPHEADER => array(
+		    'key: kt5gb1lFd6c17b89f72a9be3DpNhqaUX'
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
+		$dec = json_decode($response,true);
+		$data = array();
+		for ($i=0; $i < count($dec['data']); $i++) { 
+			array_push($data, array(
+				"id"=>$dec['data'][$i]['id']."|".$dec['data'][$i]['label'],
+				"text"=>$dec['data'][$i]['label'],
+			));
+		}
+		echo json_encode($data);
+	}
 	public function mitra_produk(){
 		$mitra_id = $this->uri->segment(3);
 		$id = $this->input->get('id');
@@ -277,6 +328,7 @@ class Dashboard extends CI_Controller
 			$data['harga_beli'] = $get->harga_beli;
 			$data['foto']       = $get->foto;
 			$data['stok']       = $get->stok;
+			$data['berat']      = $get->berat;
 			$data['hidden']     = "";
 			$data['path_lama']  = $get->foto;
 			$data['btn_text']   = "Update";
@@ -288,10 +340,12 @@ class Dashboard extends CI_Controller
 			$data['harga_beli'] = "";
 			$data['foto']       = "";
 			$data['stok']       = "";
+			$data['berat']      = "";
 			$data['hidden']     = "d-none";
 			$data['path_lama']  = "";
 			$data['btn_text']   = "Simpan";
 		}
+		$data['mitra'] = $this->db->query("SELECT * from usaha where id = '".$mitra_id."'")->row();
 		$data['produk'] = $this->getListMitraProduk($mitra_id);
 		$data['mitra_id'] = ($mitra_id);
 		$this->template->load('template','mitra/list_produk', $data);
@@ -337,6 +391,7 @@ class Dashboard extends CI_Controller
 		$harga_beli = str_replace(".", "", $this->input->post('harga_beli'));
 		$foto = $this->input->post('foto');
 		$stok = str_replace(".", "", $this->input->post('stok'));
+		$berat = str_replace(".", "", $this->input->post('berat'));
 
 		$path_lama = $this->input->post('path_lama');
 		$path_lama = str_replace(base_url(), "", $path_lama);
@@ -356,6 +411,7 @@ class Dashboard extends CI_Controller
 					'harga_beli'=>$harga_beli,
 					'foto'=>$img_url,
 					'stok'=>$stok,
+					'berat'=>$berat,
 					'created_at'=>$tgl,
 					'updated_at'=>$tgl,
 				);
@@ -376,6 +432,7 @@ class Dashboard extends CI_Controller
 					'harga_beli'=>$harga_beli,
 					'foto'=>$img_url,
 					'stok'=>$stok,
+					'berat'=>$berat,
 					'updated_at'=>$tgl,
 				);
 				$this->db->update('produk',$value,$where);
@@ -390,6 +447,10 @@ class Dashboard extends CI_Controller
 			$this->session->set_flashdata('pesan', $alert);
 		}
 		redirect('Dashboard/mitra_produk/'.$mitra_id);
+	}
+	public function transaksi(){
+		$data['mitra'] = $this->getListMitra();
+		$this->template->load('template','transaksi/list_transaksi', $data);
 	}
 }
 ?>

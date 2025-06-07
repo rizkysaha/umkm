@@ -27,10 +27,13 @@
 	 		if($get_user){
 	 			// membuat session
 	            $this->session->set_userdata('id', $get_user->id);
+	            $this->session->set_userdata('role_id', $get_user->role_id);
 	            $this->session->set_userdata('is_login', TRUE);
-
-	            redirect(base_url('dashboard'));
-
+	            if($get_user->role_id==1){
+		            redirect(base_url('dashboard'));
+	            } else {
+		            redirect(base_url());
+	            }
 	 		} else {
 	 			$this->session->set_flashdata('alert','<div class="alert alert-danger alert-dismissible">
 	                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
